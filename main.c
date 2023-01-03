@@ -3,12 +3,21 @@
 #include <time.h>
 #include <string.h>
 
+struct jogador {
 
+    char nome[50];
+    int opcoes[13];
+    int valores[13];
 
-int numero_trocar(void);
+};
+
+int numerodejogadores(void);
+int numero_trocar(int dado[], struct jogador *apontador);
+void nomedosjogadores(void);
+int trocadados(struct jogador *apontador);
 void yahtzee(void);
 void dados(int arr[], int tamanho);
-int trocadados(void);
+
 void opcoes(void);
 void relancar(int arr[], int tamanho);
 void pontos(int dado[]);
@@ -22,26 +31,18 @@ int largestraight(int dado[]);
 int chance(int dado[]);
 int cincoiguais(int dado[]);
 int contador(int dado[], int numero);
-void pontoss(int dado[]);
 
-/*typedef struct {
 
-    char nome;
-    int valor;
-    int roll;
+int *valoresguardados();
+int *criaropcoes();
+void selecionar_opcao(void);
 
-}dado;
 
-typedef struct {
-    char nome[30];
-    int dados[5];
-
-    int xdados[5]; //se lançamos ou não os dados
-
-    int nLan; //numero de lançamentos
-}jogador;*/
+void selecionarmesmo(int dado[], struct jogador *apontador);
 
 //https://www.tutorialspoint.com/cprogramming/c_structures.htm
+
+
 
 void menu(void) {
 
@@ -72,88 +73,239 @@ void menu(void) {
             break;
     }
 }
-void opcoes(void){
-    yahtzee();
-    int op;
-    do{
-        printf("|-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-|");
-        printf("\n\nO que pretende fazer?");
-        printf("\n1 -> Manter ou não dados?");
-        printf("\n2 -> Preencher a tabela");
-        printf("\n\n|-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-|");
-        printf("\n\nInsira o que pretende fazer: ");
-        scanf(" %d", &op);
-    }while( op < 1 || op > 4);
-    switch (op){
-        case 1:
-            trocadados();
-            break;
-        case 2:
-            exit(1);
-    }
-}
+
 void pontos(int dado[]){
 
-    printf("\n|Ones:              %d |", valoresiguais((dado), 1));
-    printf("\n|Twos:              %d |", valoresiguais((dado), 2));
-    printf("\n|Threes:            %d |", valoresiguais((dado), 3));
-    printf("\n|Fours:             %d |", valoresiguais((dado), 4));
-    printf("\n|Fives:             %d |", valoresiguais((dado), 5));
-    printf("\n|Sixes:             %d |", valoresiguais((dado), 6));
-    printf("\n-------------");
-    printf("\n|Three of a kind:   %d |", threeofakind(dado));
-    printf("\n|Four of a kind:    %d |", fourofakind(dado));
-    printf("\n|Full house:        %d |", fullhouse(dado));
-    printf("\n|Small Straight:    %d |", smallstraight(dado));
-    printf("\n|Large Straight:    %d |", largestraight(dado));
-    printf("\n|Chance:            %d |", chance(dado));
-    printf("\n|Yahtzee:           %d |", cincoiguais(dado));
+    printf("\n|1-  Ones:              %d |", valoresiguais((dado), 1));
+    printf("\n|2-  Twos:              %d |", valoresiguais((dado), 2));
+    printf("\n|3-  Threes:            %d |", valoresiguais((dado), 3));
+    printf("\n|4-  Fours:             %d |", valoresiguais((dado), 4));
+    printf("\n|5-  Fives:             %d |", valoresiguais((dado), 5));
+    printf("\n|6-  Sixes:             %d |", valoresiguais((dado), 6));
+    printf("\n-----------------");
+    printf("\n|7-  Three of a kind:   %d |", threeofakind(dado));
+    printf("\n|8-  Four of a kind:    %d |", fourofakind(dado));
+    printf("\n|9-  Full house:        %d |", fullhouse(dado));
+    printf("\n|10- Small Straight:    %d |", smallstraight(dado));
+    printf("\n|11- Large Straight:    %d |", largestraight(dado));
+    printf("\n|12- Chance:            %d |", chance(dado));
+    printf("\n|13- Yahtzee:           %d |", cincoiguais(dado));
 }
-void pontoss(int dado[]){
-    int i, opcoes[13][2] = {0}, escolha;
 
-    for( i = 1; i <= 6; i++){
-        opcoes[i-1][1] = valoresiguais((dado), i);
+void selecionarmesmo(int dado[], struct jogador *apontador){
+
+    printf("\nDados: ");
+    for (int i = 0; i < 5; i++) {
+        printf(" %d", dado[i]);
+    }
+    /*
+    printf("\n|1-  Ones:              %d |", valoresiguais((dado), 1));
+    printf("\n|2-  Twos:              %d |", valoresiguais((dado), 2));
+    printf("\n|3-  Threes:            %d |", valoresiguais((dado), 3));
+    printf("\n|4-  Fours:             %d |", valoresiguais((dado), 4));
+    printf("\n|5-  Fives:             %d |", valoresiguais((dado), 5));
+    printf("\n|6-  Sixes:             %d |", valoresiguais((dado), 6));
+    printf("\n-----------------");
+    printf("\n|7-  Three of a kind:   %d |", threeofakind(dado));
+    printf("\n|8-  Four of a kind:    %d |", fourofakind(dado));
+    printf("\n|9-  Full house:        %d |", fullhouse(dado));
+    printf("\n|10- Small Straight:    %d |", smallstraight(dado));
+    printf("\n|11- Large Straight:    %d |", largestraight(dado));
+    printf("\n|12- Chance:            %d |", chance(dado));
+    printf("\n|13- Yahtzee:           %d |", cincoiguais(dado));
+*/
+
+    // MUDAR ISTO TUDO APENAS MEXER COM VETORES NA ESTRUTURAS, NADA DE VETORES LOCAIS, BOA NOITE
+    int opcoes[13];
+    int i;
+    int valores[13];
+    for(i = 0; i < 13; i++){
+        opcoes[i] = apontador->opcoes[i];
+        valores[i] = apontador->valores[i];
+
     }
 
-    while(1) {
 
-        printf("\n0--|Ones:              %d |", opcoes[0][1]);
-        printf("\n1--|Twos:              %d |", valoresiguais((dado), 2));
-        printf("\n2--|Threes:            %d |", valoresiguais((dado), 3));
-        printf("\n3--|Fours:             %d |", valoresiguais((dado), 4));
-        printf("\n4--|Fives:             %d |", valoresiguais((dado), 5));
-        printf("\n5--|Sixes:             %d |", valoresiguais((dado), 6));
-        printf("\n-------------");
-        printf("\n6--|Three of a kind:   %d |", threeofakind(dado));
-        printf("\n7--|Four of a kind:    %d |", fourofakind(dado));
-        printf("\n8--|Full house:        %d |", fullhouse(dado));
-        printf("\n9-|Small Straight:     %d |", smallstraight(dado));
-        printf("\n10-|Large Straight:    %d |", largestraight(dado));
-        printf("\n11-|Chance:            %d |", chance(dado));
-        printf("\n12-|Yahtzee:           %d |", cincoiguais(dado));
+    int escolha = 0;
+    do{
 
-        printf("\nIntroduza a opcao que quiser para preencher a tabela: ");
+        printf("\nIntroduza qual opcao pretende preencher: ");
         scanf(" %d", &escolha);
-        if (escolha >= 1 && escolha <= 13) {
-            // Check if the option has already been selected
-            if (opcoes[escolha][0] == 1) {
-                printf("Option %d has already been selected. Please select a different option.\n", escolha);
-            } else {
-                printf("Option %d selected.\n", escolha);
-                opcoes[escolha][0] = 1;
+
+        if(escolha < 1 || escolha > 13){
+            printf("Opcao invalida.");
+        }
+        else if(opcoes[escolha - 1] == 1){
+            printf("Opcao ja selecionada, por favor escolha outra");
+        }
+
+    }while(escolha < 1 || escolha > 13);
+    opcoes[escolha -1] = 1;
+    switch (escolha){
+        case 1:
+            valores[escolha -1] =  valoresiguais((dado), 1);
+        case 2:
+            valores[escolha -1] =  valoresiguais((dado), 2);
+        case 3:
+            valores[escolha -1] =  valoresiguais((dado), 3);
+        case 4:
+            valores[escolha -1] =  valoresiguais((dado), 4);
+        case 5:
+            valores[escolha -1] =  valoresiguais((dado), 5);
+        case 6:
+            valores[escolha -1] =  valoresiguais((dado), 6);
+        case 7:
+            valores[escolha -1] =  threeofakind(dado);
+        case 8:
+            valores[escolha -1] =  fourofakind(dado);
+        case 9:
+            valores[escolha -1] =  fullhouse(dado);
+        case 10:
+            valores[escolha -1] = smallstraight(dado);
+        case 11:
+            valores[escolha -1] =  largestraight(dado);
+        case 12:
+            valores[escolha -1] = chance(dado);
+        case 13:
+            valores[escolha -1] = cincoiguais(dado);
+
+    }
+
+    if(opcoes[1-1] == 1){
+        printf("\n|1-  Ones:              %d |", valoresiguais((dado), 1));
+    }    else{
+        printf("\n|1-  Ones:              %d |", valores[1-1]);
+    }
+    if(opcoes[2-1] == 1){
+        printf("\n|2-  Twos:              %d |", valoresiguais((dado), 2));
+    }    else{
+        printf("\n|2-  Twos:              %d |", valores[2-1]);
+    }
+    if(opcoes[3-1] == 1){
+        printf("\n|3-  Threes:            %d |", valoresiguais((dado), 3));
+    }    else{
+        printf("\n|3-  Threes:              %d |", valores[3-1]);
+    }
+    if(opcoes[4-1] == 1){
+        printf("\n|4-  Fours:              %d |", valoresiguais((dado), 4));
+    }    else{
+        printf("\n|4-  Fours:              %d |", valores[4-1]);
+    }
+    if(opcoes[5-1] == 1){
+        printf("\n|5-  Fives:              %d |", valoresiguais((dado), 5));
+    }    else{
+        printf("\n|5-  Fives:              %d |", valores[5-1]);
+    }
+    if(opcoes[6-1] == 1){
+        printf("\n|6-  Sixes:              %d |", valoresiguais((dado), 6));
+    }    else{
+        printf("\n|6-  Sixes:              %d |", valores[6-1]);
+    }
+    printf("\n-----------------");
+    if(opcoes[7-1] == 1){
+        printf("\n|7-  Three of a kind:   %d |", threeofakind(dado));
+    }    else{
+        printf("\n|7-  Three of a kind:   %d |", valores[7-1]);
+    }
+    if(opcoes[8-1] == 1){
+        printf("\n|8-  Four of a kind:    %d |", fourofakind(dado));
+    }    else{
+        printf("\n|8-  Four of a kind:    %d |", valores[8-1]);
+    }
+    if(opcoes[9-1] == 1){
+        printf("\n|9-  Full house:        %d |", fullhouse(dado));
+    }    else{
+        printf("\n|9-  Full house:        %d |", valores[8-1]);
+    }
+
+    if(opcoes[10-1] == 1){
+        printf("\n|10- Small Straight:    %d |", smallstraight(dado));
+    }    else{
+        printf("\n|10- Small Straight:    %d |", valores[8-1]);
+    }
+    if(opcoes[11-1] == 1){
+        printf("\n|11- Large Straight:    %d |", largestraight(dado));
+    }    else{
+        printf("\n|11- Large Straight:    %d |", valores[8-1]);
+    }
+    if(opcoes[12-1] == 1){
+        printf("\n|12- Chance:            %d |", chance(dado));
+    }    else{
+        printf("\n|12- Chance:            %d |", valores[12-1]);
+    }
+    if(opcoes[13-1] == 1){
+        printf("\n|13- Yahtzee:           %d |", cincoiguais(dado));
+    }    else{
+        printf("\n|13- Yahtzee:           %d |", valores[13-1]);
+    }
 
 
-                break;
-            }
-        } else {
-            printf("Invalid selection. Please try again.\n");
+}
+/*void selecionar_opcao(void){
+
+
+    int *valores = (int*) malloc(13 * sizeof(int));
+
+    for (int i = 0; i < 13; i++) {
+        if(valores[i] <= -1)
+            valores[i] = -1;
+        else{
+            continue;
+        }
+
+    }
+    int *opcoes = criaropcoes();
+
+    int escolha = 0;
+    do{
+
+        printf("Introduza qual opcao pretende preencher: ");
+        scanf(" %d", &escolha);
+
+        if(escolha < 1 || escolha > 13){
+            printf("Opcao invalida.");
+        }
+        else if(opcoes[escolha - 1] == 1){
+            printf("Opcao ja selecionada, por favor escolha outra");
+        }
+        opcoes[escolha - 1] = 1;
+
+    }while(escolha < 1 || escolha > 13);
+
+    opcoes[escolha -1] = 1;
+
+
+
+
+}
+int *valoresguardados() {
+    int *valores = (int*) malloc(13 * sizeof(int));
+
+    for (int i = 0; i < 13; i++) {
+        if(valores[i] <= -1)
+            valores[i] = -1;
+        else{
+            continue;
+        }
+
+    }
+
+    return valores;
+}
+int *criaropcoes() {
+    int *opcoes = (int*) malloc(13 * sizeof(int));
+
+    for (int i = 0; i < 13; i++) {
+        if(opcoes[i] != 1)
+            opcoes[i] = 0;
+        else{
+            continue;
         }
     }
 
+    return opcoes;
 }
-
-
+*/
 int chance(int dado[]){
     int i, soma = 0;
     for( i = 0; i < 5; i++){
@@ -161,7 +313,6 @@ int chance(int dado[]){
     }
     return soma;
 }
-
 int valoresiguais(int dado[], int numero){
 
     int i, soma = 0;
@@ -171,7 +322,6 @@ int valoresiguais(int dado[], int numero){
         }
     return soma;
 }
-
 int contador(int dado[], int numero) {
     int i, contador = 0;
     for (i = 0; i < 5; i++){
@@ -224,15 +374,12 @@ int fullhouse(int dado[]){
     }
 }
 int sorteador(int dado[]){
-
     int ordenados[5];
     int p;
     for ( p = 0; p < 5; p++){
         ordenados[p] = dado[p];
 
     }
-
-
     int i, j;
     for (i = 0; i < 5 - 1; i++) {
         for (j = 0; j < 5 - i - 1; j++) {
@@ -241,7 +388,6 @@ int sorteador(int dado[]){
                 ordenados[j] = ordenados[j + 1];
                 ordenados[j + 1] = temporario;
             }        }    }
-
 }
 int smallstraight(int dado[]){
 
@@ -258,7 +404,6 @@ int smallstraight(int dado[]){
             return 0;
     }
     return 30;
-
 }
 int largestraight(int dado[]){
     int ordenado[5];
@@ -274,11 +419,7 @@ int largestraight(int dado[]){
             return 0;
     }
     return 40;
-
-
 }
-
-
 int cincoiguais(int dado[]){
     int i;
     for( i = 0; i < 6; i++){
@@ -287,9 +428,6 @@ int cincoiguais(int dado[]){
         }}
     return 0;
 }
-
-
-
 void dados(int arr[],int tamanho) {
     int i;
     srand((int)time(NULL));
@@ -306,37 +444,32 @@ void relancar(int arr[], int tamanho){
     for (i = 0; i < tamanho; i++) {
         arr[i] = rand() % 6 + 1;
     }}
-
-int numero_trocar(void){
-
+int numero_trocar(int dado[], struct jogador *apontador){
     int troca;
-    int trocaux;
     do{
         printf("\nQuantos dados pretende trocar? ");
         scanf(" %d", &troca);
-        trocaux = troca;
         if ( troca < 0 || troca > 5){
             printf("Valor invalido, insira um valor entre 1 e 5");
         }
         else if ( troca == 0){
-            printf("\n\n");
-            trocadados();
+            selecionarmesmo(dado, &apontador);
+
         }
 
     }while ( troca < 1 || troca > 5);
     return troca;
 
 }
-
-int trocadados(void){
+int trocadados(struct jogador *apontador){
 
     int arr[5];
 
     dados(arr, 5);
-    int i, j;
+    int i;
 
     pontos(arr);
-    int troca = numero_trocar();
+    int troca = numero_trocar(arr, &apontador);
 
 
     int dadoatrocarposicao[troca];
@@ -348,60 +481,62 @@ int trocadados(void){
         scanf("%d", &dadoatrocarposicao[i]);
 
         dadoatrocar[i] = arr[dadoatrocarposicao[i]];
-
-
     }
-    /*for (j = 0; j < troca ; j++){
-        printf("\nDados a trocar: %d", dadoatrocar[j]);
-        printf("\tDados a trocar posicao: %d ", dadoatrocarposicao[j]);
-    }*/
     relancar(dadoatrocar, troca);
     int k, l;
     for (l = 0; l < troca; l++){
         arr[dadoatrocarposicao[l]] = dadoatrocar[l];
     }
     printf("\nDados: ");
-    for( l = 0; l < 5; l++){
+    for( k = 0; k < 5; k++){
 
-        printf(" %d", arr[l]);
+        printf(" %d", arr[k]);
     }
     printf("\n");
-    pontoss(arr);
+    pontos(arr);
 
-    trocadados();
+    selecionarmesmo(arr, &apontador);
+
 //tamanho do vetor apartir do numero de dados a rodar passar para cima rodar de novo? função receber dois valores?
 }
+int numerodejogadores(void){
+    int numero;
+    printf("Introduza o numero de jogadores: ");
+    scanf(" %d", &numero);
+    return numero;
+}
+void nomedosjogadores(void){
 
-
-
+}
 
 void yahtzee(void) {
 
-    int jogadores = 0; printf("\nInsira o numero de jogadores: ");
-    scanf(" %d", &jogadores);
+    int i;
+    struct jogador y1;
+    for(i = 0; i < 13; i++){
+
+        y1.opcoes[i] = 0;
+        y1.valores[i] = -1;
+    }
+    printf("Introduza o nome do jogador: ");
+    fgets(y1.nome, 50, stdin);
 
 
-    trocadados();
+    numerodejogadores();
+    //nomedosjogadores();
+     //criaropcoes();
+
+    trocadados(&y1);
+    //free(opcoes);
 }
 
 void exit(int x);
 int main() {
 
+
     menu();
-
-
-
-    //int *p;
-    //int i;
-
-    //p = dados();
-    //printf("Dados: ");
-    //for (i = 0; i < 5; i++)
-    //    printf(" %d", *(p + i));
-
 
     printf("\n");
     system("read -p 'Press Enter to continue...' var");
     return 0;
 }
-

@@ -353,34 +353,50 @@ int sorteador(struct jogador *apontador){
 }
 int smallstraight(struct jogador *apontador){
 
-    int ordenado[5];
+    int ordenado[5], somatorio = 1;
 
     int i;
-    for ( i = 0; i < 5; i++){
+    for ( i = 0; i < 4; i++){
         ordenado[i] = apontador->dado[i];
     }
     sorteador(apontador);
 
     for(i = 0; i < 3; i++){
-        if(ordenado[i] + 1 != ordenado[i+1])
-            return 0;
+        if(ordenado[i + 1] - ordenado[i] == 1){
+            somatorio ++
+        }
+        else{
+            somatorio = 1;
+        }
     }
-    return 30;
+    if(somatorio==4){
+        return 30
+    }
+    else(
+        return 0;
+    )
+    
+    
 }
 int largestraight(struct jogador *apontador){
-    int ordenado[5];
+    int ordenado[5], somatorio = 1;
 
     int i;
-    for ( i = 0; i < 5; i++){
+    for ( i = 0; i < 4; i++){
         ordenado[i] = apontador->dado[i];
     }
     sorteador(apontador);
 
     for(i = 0; i < 4; i++){
-        if(ordenado[i] + 1 != ordenado[i+1])
-            return 0;
+        if(ordenado[i + 1] - ordenado[i] == 1)
+            somatorio++;
     }
-    return 40;
+    if(somatorio == 5){
+        return 40;
+    }
+    else{
+        return 0;
+    }
 }
 int cincoiguais(struct jogador *apontador){
     int i;

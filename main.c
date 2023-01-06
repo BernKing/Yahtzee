@@ -362,7 +362,7 @@ int smallstraight(struct jogador *apontador){
     sorteador(apontador);
 
     for(i = 0; i < 3; i++){
-        if(apontador->dado[i] + 1 != apontador->dado[i+1])
+        if(ordenado[i] + 1 != ordenado[i+1])
             return 0;
     }
     return 30;
@@ -377,7 +377,7 @@ int largestraight(struct jogador *apontador){
     sorteador(apontador);
 
     for(i = 0; i < 4; i++){
-        if(apontador->dado[i] + 1 != apontador->dado [i+1])
+        if(ordenado[i] + 1 != ordenado[i+1])
             return 0;
     }
     return 40;
